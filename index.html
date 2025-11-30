@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="crimewatch web app.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="crimewatch">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="logo.png"/>
+
+  <title>crimewatch</title>
+  <link rel="manifest" href="manifest.json">
+
+  <style>
+    /* Loading overlay centered while Flutter boots */
+    #loading {
+      position:fixed;
+      inset:0;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      background: #ffffff;
+      z-index: 9999;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* Logo above progress with padding */
+    #logo {
+      width: 140px;
+      height: auto;
+      display:block;
+      margin-bottom: 24px; /* padding above progress indicator */
+      object-fit: contain;
+    }
+
+    /* Linear progress container */
+    .progress-container {
+      width: 80%;
+      max-width: 420px;
+      height: 6px;
+      background: #e6e6e6;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    /* Black progress bar - indeterminate animation */
+    .progress-bar {
+      height: 100%;
+      background: #000000; /* black color as requested */
+      width: 0%;
+      animation: progressIndeterminate 1.6s cubic-bezier(.4,0,.2,1) infinite;
+    }
+
+    @keyframes progressIndeterminate {
+      0% { width: 0%; transform: translateX(-0%); }
+      50% { width: 60%; transform: translateX(0%); }
+      100% { width: 100%; transform: translateX(0%); }
+    }
+
+    /* Optional: smoothly hide overlay when Flutter is ready */
+    #loading.hidden {
+      transition: opacity 230ms linear;
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading UI shown while Flutter app boots.
+       Place logo.png alongside other static assets (e.g. in web/ directory). -->
+  <div id="loading" role="status" aria-label="Loading crimewatch">
+    <img id="logo" src="logo.png" alt="crimewatch logo">
+    <div class="progress-container" aria-hidden="false">
+      <div class="progress-bar"></div>
+    </div>
+  </div>
+
+  <script src="flutter_bootstrap.js" async></script>
+
+  <script>
+    // Hide the loading overlay when the Flutter app renders its first frame.
+    // The bootstrap will dispatch 'flutter-first-frame' when ready.
+    window.addEventListener('flutter-first-frame', function () {
+      var loading = document.getElementById('loading');
+      if (loading) {
+        loading.classList.add('hidden');
+        // fully remove it after the fade to avoid overlap
+        setTimeout(function () { loading.style.display = 'none'; }, 300);
+      }
+    });
+
+    // Fallback: if flutter-first-frame doesn't fire for some reason, hide after timeout
+    setTimeout(function () {
+      var loading = document.getElementById('loading');
+      if (loading && !loading.classList.contains('hidden')) {
+        loading.classList.add('hidden');
+        setTimeout(function () { loading.style.display = 'none'; }, 300);
+      }
+    }, 15000); // 15s max
+  </script>
+</body>
+</html>
